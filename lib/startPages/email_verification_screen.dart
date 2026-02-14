@@ -1,5 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../app_theme.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
@@ -11,29 +12,62 @@ class EmailVerificationScreen extends StatefulWidget {
 }
 
 class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
-  final List<TextEditingController> _controllers =
-      List.generate(4, (_) => TextEditingController());
-  final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
+  Timer? _timer;
+  bool _resending = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Poll every 3 seconds to check if user clicked the link in their email
+    _timer = Timer.periodic(const Duration(seconds: 3), (_) async {
+      await FirebaseAuth.instance.currentUser?.reload();
+      final verified =
+          FirebaseAuth.instance.currentUser?.emailVerified ?? false;
+      if (verified && mounted) {
+        _timer?.cancel();
+        final role = ModalRoute.of(context)?.settings.arguments as String? ??
+            'passenger';
+        Navigator.pushReplacementNamed(context, '/verification-done',
+            arguments: role);
+      }
+    });
+  }
 
   @override
   void dispose() {
-    for (final c in _controllers) c.dispose();
-    for (final f in _focusNodes) f.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
-  void _onDigitEntered(int index, String value) {
-    if (value.length == 1 && index < 3) {
-      _focusNodes[index + 1].requestFocus();
-    }
-    if (value.isEmpty && index > 0) {
-      _focusNodes[index - 1].requestFocus();
+  Future<void> _resend() async {
+    setState(() => _resending = true);
+    try {
+      await FirebaseAuth.instance.currentUser?.sendEmailVerification();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Verification email resent!',
+              style: TextStyle(fontFamily: 'Roboto')),
+          backgroundColor: AppColors.primary,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to resend. Please try again.',
+              style: TextStyle(fontFamily: 'Roboto')),
+          backgroundColor: AppColors.errorRed,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _resending = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final role = ModalRoute.of(context)?.settings.arguments as String? ?? 'passenger';
+    final email = FirebaseAuth.instance.currentUser?.email ?? '';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -49,6 +83,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                const Icon(
+                  Icons.mark_email_unread_outlined,
+                  size: 64,
+                  color: AppColors.primary,
+                ),
+                const SizedBox(height: 16),
                 const Text(
                   'Check your Email',
                   style: TextStyle(
@@ -58,100 +98,60 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                     color: AppColors.textDark,
                   ),
                 ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Write the verification code sent to your email',
-                  style: TextStyle(
-                    fontSize: 12,
+                const SizedBox(height: 10),
+                Text(
+                  'We sent a verification link to:\n$email\n\nOpen your email and tap the link to verify your account.',
+                  style: const TextStyle(
+                    fontSize: 13,
                     color: AppColors.textGrey,
                     fontFamily: 'Roboto',
+                    height: 1.6,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'This screen will continue automatically once verified.',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.primary,
+                    fontFamily: 'Roboto',
+                    fontStyle: FontStyle.italic,
                   ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 28),
 
-                // 4 digit boxes
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(4, (i) => _digitBox(i)),
-                ),
-                const SizedBox(height: 28),
-
-                // Done button
-                AppButton(
-                  label: 'Done',
-                  onPressed: () {
-                    final code = _controllers.map((c) => c.text).join();
-                    if (code.length == 4) {
-                      // TODO: verify code with Firebase
-                      // On success → final done screen
-                      Navigator.pushReplacementNamed(
-                        context,
-                        '/verification-done',
-                        arguments: role,
-                      );
-                    } else {
-                      // Wrong / incomplete → error screen
-                      Navigator.pushReplacementNamed(
-                        context,
-                        '/email-error',
-                        arguments: role,
-                      );
-                    }
-                  },
-                ),
+                // Resend button
+                _resending
+                    ? const CircularProgressIndicator(
+                        color: AppColors.primary)
+                    : AppButton(
+                        label: 'Resend Email',
+                        onPressed: _resend,
+                      ),
                 const SizedBox(height: 12),
 
-                // Resend button
-                AppButton(
-                  label: 'Resend',
-                  color: Colors.white,
-                  textColor: AppColors.primary,
+                // Wrong email? go back to signup
+                TextButton(
                   onPressed: () {
-                    // TODO: resend Firebase email verification
+                    _timer?.cancel();
+                    FirebaseAuth.instance.currentUser?.delete();
+                    Navigator.pushReplacementNamed(context, '/signup');
                   },
+                  child: const Text(
+                    'Wrong email? Sign up again',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.textGrey,
+                      fontFamily: 'Roboto',
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _digitBox(int index) {
-    return SizedBox(
-      width: 52,
-      height: 52,
-      child: TextField(
-        controller: _controllers[index],
-        focusNode: _focusNodes[index],
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        maxLength: 1,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        style: const TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Roboto',
-        ),
-        decoration: InputDecoration(
-          counterText: '',
-          contentPadding: EdgeInsets.zero,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFFCCCCCC)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFFCCCCCC)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: AppColors.primary),
-          ),
-        ),
-        onChanged: (v) => _onDigitEntered(index, v),
       ),
     );
   }

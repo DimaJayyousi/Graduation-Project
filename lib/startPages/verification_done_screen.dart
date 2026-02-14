@@ -22,7 +22,6 @@ class VerificationDoneScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Gold checkmark circle
                 Container(
                   width: 100,
                   height: 100,
@@ -37,10 +36,8 @@ class VerificationDoneScreen extends StatelessWidget {
                   label: 'Go to Home',
                   onPressed: () {
                     if (role == 'driver') {
-                      // TODO: navigate to driver home (coming later)
                       Navigator.pushReplacementNamed(context, '/driver-home');
                     } else {
-                      // TODO: navigate to passenger home (coming later)
                       Navigator.pushReplacementNamed(context, '/passenger-home');
                     }
                   },

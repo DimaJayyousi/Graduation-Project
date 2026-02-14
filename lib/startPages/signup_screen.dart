@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../app_theme.dart';
+import '../services/auth_service.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -14,8 +16,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _phoneCtrl    = TextEditingController();
   final _passwordCtrl = TextEditingController();
   final _dobCtrl      = TextEditingController();
-  bool _obscure       = true;
-  String _gender      = 'Male';
+  bool _obscure   = true;
+  bool _loading   = false;
+  String _gender  = 'Male';
 
   @override
   void dispose() {
@@ -25,6 +28,65 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _passwordCtrl.dispose();
     _dobCtrl.dispose();
     super.dispose();
+  }
+
+  Future<void> _signUp(String role) async {
+    if (_nameCtrl.text.trim().isEmpty ||
+        _emailCtrl.text.trim().isEmpty ||
+        _phoneCtrl.text.trim().isEmpty ||
+        _passwordCtrl.text.isEmpty ||
+        _dobCtrl.text.trim().isEmpty) {
+      _showError('Please fill in all fields.');
+      return;
+    }
+
+    setState(() => _loading = true);
+
+    try {
+      // 1. Create user + save to Firestore
+      final cred = await AuthService.signUp(
+        email:    _emailCtrl.text,
+        password: _passwordCtrl.text,
+        name:     _nameCtrl.text,
+        phone:    _phoneCtrl.text,
+        dob:      _dobCtrl.text,
+        gender:   _gender,
+        role:     role,
+      );
+
+      // 2. Send verification email in the background — don't await it
+      //    so it never blocks navigation even if it's slow
+      cred.user?.sendEmailVerification().catchError((_) {});
+
+      // 3. Navigate immediately
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/upload-photo', arguments: role);
+
+    } on FirebaseAuthException catch (e) {
+      _showError(_authError(e.code));
+    } catch (e) {
+      _showError('Something went wrong. Please try again.');
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  String _authError(String code) {
+    switch (code) {
+      case 'email-already-in-use': return 'This email is already registered.';
+      case 'invalid-email':        return 'Please enter a valid email address.';
+      case 'weak-password':        return 'Password must be at least 6 characters.';
+      default:                     return 'Sign up failed. Please try again.';
+    }
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: const TextStyle(fontFamily: 'Roboto')),
+        backgroundColor: AppColors.errorRed,
+      ),
+    );
   }
 
   @override
@@ -59,12 +121,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Full Name
                 _label('Full Name'),
                 AppTextField(hint: 'Enter full name', controller: _nameCtrl),
                 const SizedBox(height: 12),
 
-                // Email
                 _label('Email'),
                 AppTextField(
                   hint: 'Enter your email',
@@ -73,7 +133,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // Phone
                 _label('Phone number'),
                 AppTextField(
                   hint: 'Enter phone number',
@@ -82,7 +141,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // Password
                 _label('Password'),
                 AppTextField(
                   hint: '············',
@@ -99,7 +157,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // Date of Birth
                 _label('Day of Birth'),
                 AppTextField(
                   hint: 'DD/MM/YY',
@@ -108,7 +165,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // Gender
                 _label('Gender'),
                 const SizedBox(height: 4),
                 Row(
@@ -120,21 +176,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // Sign up button
-                AppButton(
-                  label: 'Sign up',
-                  onPressed: () {
-                    // TODO: Firebase Auth create user
-                    Navigator.pushReplacementNamed(
-                      context,
-                      '/upload-photo',
-                      arguments: role,
-                    );
-                  },
-                ),
+                _loading
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primary,
+                        ),
+                      )
+                    : AppButton(
+                        label: 'Sign up',
+                        onPressed: () => _signUp(role),
+                      ),
                 const SizedBox(height: 12),
 
-                // Already have account
                 Center(
                   child: GestureDetector(
                     onTap: () => Navigator.pushReplacementNamed(
