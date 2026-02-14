@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "849647589718",
+    "project_id": "tal3-3b41a",
+    "storage_bucket": "tal3-3b41a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849647589718:android:870ed3432c5ba9c4c6def7",
+        "android_client_info": {
+          "package_name": "com.example.tal3"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmHnYBpqA3C2Z9e5jWMv4QzRusFmdKbCc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849647589718:android:4e9b73766cbbc923c6def7",
+        "android_client_info": {
+          "package_name": "com.tal3.graduation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmHnYBpqA3C2Z9e5jWMv4QzRusFmdKbCc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
