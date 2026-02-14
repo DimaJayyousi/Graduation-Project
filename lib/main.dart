@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-
+import './services/firebase_options.dart';
 import 'app_theme.dart';
 import 'startPages/splash_screen.dart';
 import 'startPages/note_screen1.dart';
@@ -16,6 +15,9 @@ import 'startPages/email_error_screen.dart';
 import 'startPages/verification_done_screen.dart';
 import 'startPages/reset_password_screen.dart';
 import 'passenger_home_screen.dart';
+import 'NewUSer/trips_screen.dart';
+import 'NewUSer/chat_screen.dart';
+import 'Passengerhelpscreen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -52,6 +54,11 @@ class TaSApp extends StatelessWidget {
         '/verification-done':    (_) => const VerificationDoneScreen(),
         '/reset-password':       (_) => const ResetPasswordScreen(),
         '/passenger-home':       (_) => const PassengerHomeScreen(),
+         '/trips':              (_) => const TripsScreen(),
+        '/chat':               (_) => const ChatScreen(),
+        '/help': (_) => const PassengerHelpScreen(),
+
+
 
         // Placeholders — to be built later
         '/driver-home':          (_) => const _PlaceholderPage('Driver Home'),
