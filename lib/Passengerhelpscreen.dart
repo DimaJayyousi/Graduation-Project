@@ -13,7 +13,6 @@ class _PassengerHelpScreenState extends State<PassengerHelpScreen>
   late final AnimationController _ctrl;
   late final Animation<double>   _fadeAnim;
 
-  // ── colours ─────────────────────────────────
   static const Color _amber       = Color(0xFFF39E21);
   static const Color _lightYellow = Color(0xFFF9CD46);
   static const Color _stepBg      = Color(0xFFFFF8E1);
@@ -41,7 +40,6 @@ class _PassengerHelpScreenState extends State<PassengerHelpScreen>
     super.dispose();
   }
 
-  // ── 5 steps data ────────────────────────────
   static const List<_StepData> _steps = [
     _StepData(
       number: '1',
@@ -77,28 +75,30 @@ class _PassengerHelpScreenState extends State<PassengerHelpScreen>
 
     return Scaffold(
       backgroundColor: Colors.white,
+      // ── Floating back button always visible ──────────────────────────
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+      floatingActionButton: Padding(
+        padding: EdgeInsets.only(top: top),
+        child: FloatingActionButton.small(
+          heroTag: 'help_back',
+          backgroundColor: Colors.white,
+          elevation: 3,
+          onPressed: () =>
+              Navigator.pushReplacementNamed(context, '/passenger-home'),
+          child: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            size:  18,
+            color: _textDark,
+          ),
+        ),
+      ),
       body: FadeTransition(
         opacity: _fadeAnim,
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
-            // ── TOP BAR ───────────────────────
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.only(top: top + 8, left: 4),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      size:  22,
-                      color: _textDark,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Space so content doesn't hide behind the FAB
+            SliverToBoxAdapter(child: SizedBox(height: top + 56)),
 
             // ── HEADER ────────────────────────
             const SliverToBoxAdapter(
@@ -207,7 +207,7 @@ class _PageHeader extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────
-//  _StepData  — immutable step model
+//  _StepData
 // ─────────────────────────────────────────────
 class _StepData {
   const _StepData({
@@ -243,7 +243,6 @@ class _StepCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
       child: Column(
         children: [
-          // Circle number badge
           Container(
             width:  44,
             height: 44,
@@ -263,25 +262,19 @@ class _StepCard extends StatelessWidget {
               ),
             ),
           ),
-
           const SizedBox(height: 12),
-
-          // Title
           Text(
             step.title,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontFamily:  'Roboto',
-              fontSize:    17,
-              fontWeight:  FontWeight.w700,
-              color:       Color(0xFF1A1A1A),
+              fontFamily:    'Roboto',
+              fontSize:      17,
+              fontWeight:    FontWeight.w700,
+              color:         Color(0xFF1A1A1A),
               letterSpacing: 0.2,
             ),
           ),
-
           const SizedBox(height: 8),
-
-          // Body
           Text(
             step.body,
             textAlign: TextAlign.center,
@@ -304,7 +297,6 @@ class _StepCard extends StatelessWidget {
 class _SeatsOrderSection extends StatelessWidget {
   const _SeatsOrderSection();
 
-  static const Color _red   = Color(0xFFE53935);
   static const Color _amber = Color(0xFFF39E21);
 
   @override
@@ -312,35 +304,28 @@ class _SeatsOrderSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Real seat diagram image
         ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: Image.asset(
             'Images/seatNumber.jpg',
-            width:  double.infinity,
-            fit:    BoxFit.contain,
+            width: double.infinity,
+            fit:   BoxFit.contain,
           ),
         ),
-
         const SizedBox(height: 18),
-
-        // Section title
         const Text(
           'Seats order',
           style: TextStyle(
-            fontFamily:  'Roboto',
-            fontSize:    22,
-            fontWeight:  FontWeight.w800,
-            color:       Color(0xFF1A1A1A),
+            fontFamily:    'Roboto',
+            fontSize:      22,
+            fontWeight:    FontWeight.w800,
+            color:         Color(0xFF1A1A1A),
             letterSpacing: 0.2,
           ),
         ),
-
         const SizedBox(height: 10),
-
-        // Description
         const Text(
-          'This is the order of the seats so in the which seat you want field the number represent  the same seat from the image .',
+          'This is the order of the seats so in the which seat you want field the number represent the same seat from the image.',
           style: TextStyle(
             fontFamily: 'Roboto',
             fontSize:   14,
@@ -348,24 +333,18 @@ class _SeatsOrderSection extends StatelessWidget {
             height:     1.6,
           ),
         ),
-
         const SizedBox(height: 10),
-
-        // Back Row bullet
         _RichBullet(
           prefix: 'If you choose the ',
           highlight: 'Back row',
           suffix:  ' option that mean you reserve all the 3 seats in the back.',
           highlightColor: _amber,
         ),
-
         const SizedBox(height: 6),
-
-        // All bullet
         _RichBullet(
           prefix: 'If you choose the ',
           highlight: 'All',
-          suffix:  ' option that mean you reserve all the 4 seats .',
+          suffix:  ' option that mean you reserve all the 4 seats.',
           highlightColor: _amber,
         ),
       ],
@@ -390,32 +369,26 @@ class _TravelSafelySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Real travel safely image
         ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: Image.asset(
             'Images/drivesafenote.png',
-            width:  double.infinity,
-            fit:    BoxFit.contain,
+            width: double.infinity,
+            fit:   BoxFit.contain,
           ),
         ),
-
         const SizedBox(height: 18),
-
-        // Section title
         const Text(
           'Travel safely',
           style: TextStyle(
-            fontFamily:  'Roboto',
-            fontSize:    22,
-            fontWeight:  FontWeight.w800,
-            color:       Color(0xFF1A1A1A),
+            fontFamily:    'Roboto',
+            fontSize:      22,
+            fontWeight:    FontWeight.w800,
+            color:         Color(0xFF1A1A1A),
             letterSpacing: 0.2,
           ),
         ),
-
         const SizedBox(height: 6),
-
         const Text(
           'we verify every driver\'s license and monitor activity closely',
           style: TextStyle(
@@ -425,10 +398,7 @@ class _TravelSafelySection extends StatelessWidget {
             height:     1.55,
           ),
         ),
-
         const SizedBox(height: 12),
-
-        // Bullet list
         ..._bullets.map((b) => Padding(
           padding: const EdgeInsets.only(bottom: 6),
           child: _SimpleBullet(text: b),
@@ -454,32 +424,26 @@ class _BookAndPaySection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Real payment image
         ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: Image.asset(
             'Images/payment-note.png',
-            width:  double.infinity,
-            fit:    BoxFit.contain,
+            width: double.infinity,
+            fit:   BoxFit.contain,
           ),
         ),
-
         const SizedBox(height: 18),
-
-        // Section title
         const Text(
           'Book and pay',
           style: TextStyle(
-            fontFamily:  'Roboto',
-            fontSize:    22,
-            fontWeight:  FontWeight.w800,
-            color:       Color(0xFF1A1A1A),
+            fontFamily:    'Roboto',
+            fontSize:      22,
+            fontWeight:    FontWeight.w800,
+            color:         Color(0xFF1A1A1A),
             letterSpacing: 0.2,
           ),
         ),
-
         const SizedBox(height: 6),
-
         const Text(
           'reserve your seats, meet the driver and go.',
           style: TextStyle(
@@ -489,10 +453,7 @@ class _BookAndPaySection extends StatelessWidget {
             height:     1.55,
           ),
         ),
-
         const SizedBox(height: 12),
-
-        // Bullet list
         ..._bullets.map((b) => Padding(
           padding: const EdgeInsets.only(bottom: 6),
           child: _SimpleBullet(text: b),
@@ -503,7 +464,7 @@ class _BookAndPaySection extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────
-//  _PleaseNoteSection  — amber bordered card
+//  _PleaseNoteSection
 // ─────────────────────────────────────────────
 class _PleaseNoteSection extends StatelessWidget {
   const _PleaseNoteSection();
@@ -530,21 +491,18 @@ class _PleaseNoteSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Title
           const Text(
             'Please note the following',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily:  'Roboto',
-              fontSize:    17,
-              fontWeight:  FontWeight.w800,
-              color:       Color(0xFF1A1A1A),
+              fontFamily:    'Roboto',
+              fontSize:      17,
+              fontWeight:    FontWeight.w800,
+              color:         Color(0xFF1A1A1A),
               letterSpacing: 0.2,
             ),
           ),
-
           const SizedBox(height: 6),
-
           const Text(
             'For a smooth ride without any conflict',
             textAlign: TextAlign.center,
@@ -555,10 +513,7 @@ class _PleaseNoteSection extends StatelessWidget {
               height:     1.5,
             ),
           ),
-
           const SizedBox(height: 14),
-
-          // Bullet list — left aligned
           Align(
             alignment: Alignment.centerLeft,
             child: Column(
@@ -576,7 +531,7 @@ class _PleaseNoteSection extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────
-//  _SimpleBullet  — • text
+//  _SimpleBullet
 // ─────────────────────────────────────────────
 class _SimpleBullet extends StatelessWidget {
   const _SimpleBullet({required this.text});
@@ -611,7 +566,7 @@ class _SimpleBullet extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────
-//  _RichBullet  — • text with highlighted word
+//  _RichBullet
 // ─────────────────────────────────────────────
 class _RichBullet extends StatelessWidget {
   const _RichBullet({

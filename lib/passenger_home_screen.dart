@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../app_theme.dart';
 import '../bottom_nav.dart';
 
@@ -11,7 +10,7 @@ class PassengerHomeScreen extends StatefulWidget {
 }
 
 class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
-  int _currentIndex = 0;
+  final int _navIndex = 0; // home/search is index 0
   final _searchCtrl = TextEditingController();
 
   @override
@@ -20,11 +19,26 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
     super.dispose();
   }
 
+  void _onNavTap(int index) {
+    if (index == _navIndex) return;
+    switch (index) {
+      case 1:
+        Navigator.pushReplacementNamed(context, '/trips');
+        break;
+      case 2:
+        Navigator.pushReplacementNamed(context, '/chat');
+        break;
+      case 3:
+        Navigator.pushReplacementNamed(context, '/profile');
+        break;
+      case 4:
+        Navigator.pushReplacementNamed(context, '/help');
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Get the logged-in user's display name if available
-    final user = FirebaseAuth.instance.currentUser;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -38,7 +52,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                   children: [
                     const SizedBox(height: 24),
 
-                    // ── App title ──────────────────────────────────────────
+                    // ── App title ──────────────────────────────────────
                     const Center(
                       child: Text(
                         'Tal3',
@@ -52,7 +66,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    // ── Welcome card ───────────────────────────────────────
+                    // ── Welcome card ───────────────────────────────────
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 18),
@@ -66,7 +80,6 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                       ),
                       child: Row(
                         children: [
-                          // Text side
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +121,6 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                               ],
                             ),
                           ),
-                          // Icon side
                           const Icon(
                             Icons.car_rental,
                             size: 56,
@@ -119,7 +131,7 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // ── Search bar ─────────────────────────────────────────
+                    // ── Search bar ─────────────────────────────────────
                     Container(
                       height: 52,
                       decoration: BoxDecoration(
@@ -141,24 +153,20 @@ class _PassengerHomeScreenState extends State<PassengerHomeScreen> {
                           prefixIcon: Icon(Icons.search,
                               color: AppColors.textDark, size: 22),
                           border: InputBorder.none,
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 14),
+                          contentPadding: EdgeInsets.symmetric(vertical: 14),
                         ),
                       ),
                     ),
-
-                    // ── Trip results will go here ──────────────────────────
-                    // (empty for now, trips list to be added later)
                     const Spacer(),
                   ],
                 ),
               ),
             ),
 
-            // ── Bottom nav ────────────────────────────────────────────────
+            // ── Bottom nav ─────────────────────────────────────────────
             AppBottomNav(
-              currentIndex: _currentIndex,
-              onTap: (i) => setState(() => _currentIndex = i),
+              currentIndex: _navIndex,
+              onTap: _onNavTap,
             ),
           ],
         ),
