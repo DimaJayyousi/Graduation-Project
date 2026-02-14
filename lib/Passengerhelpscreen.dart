@@ -1,20 +1,5 @@
 import 'package:flutter/material.dart';
 
-// ─────────────────────────────────────────────
-//  PassengerHelpScreen
-//  Path: lib/features/home/screens/passenger_help_screen.dart
-//
-//  Accessed from bottom nav bar (? icon, index 4)
-//  Only shown when role == 'passenger'
-//
-//  Assets used (real images, NO placeholders):
-//    assets/Images/seatNumber.jpg       ← seat diagram
-//    assets/Images/drivesafenote.png    ← travel safely illustration
-//    assets/Images/payment-note.png     ← book and pay illustration
-//
-//  Packages: NONE – pure Flutter
-// ─────────────────────────────────────────────
-
 class PassengerHelpScreen extends StatefulWidget {
   const PassengerHelpScreen({super.key});
 

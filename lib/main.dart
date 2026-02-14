@@ -15,7 +15,7 @@ import 'startPages/email_verification_screen.dart';
 import 'startPages/email_error_screen.dart';
 import 'startPages/verification_done_screen.dart';
 import 'startPages/reset_password_screen.dart';
-
+import 'passenger_home_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -51,10 +51,10 @@ class TaSApp extends StatelessWidget {
         '/email-error':          (_) => const EmailErrorScreen(),
         '/verification-done':    (_) => const VerificationDoneScreen(),
         '/reset-password':       (_) => const ResetPasswordScreen(),
+        '/passenger-home':       (_) => const PassengerHomeScreen(),
 
         // Placeholders — to be built later
         '/driver-home':          (_) => const _PlaceholderPage('Driver Home'),
-        '/passenger-home':       (_) => const _PlaceholderPage('Passenger Home'),
       },
     );
   }

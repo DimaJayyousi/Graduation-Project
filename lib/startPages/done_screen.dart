@@ -6,7 +6,8 @@ class DoneScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final role = ModalRoute.of(context)?.settings.arguments as String? ?? 'passenger';
+    final role =
+        ModalRoute.of(context)?.settings.arguments as String? ?? 'passenger';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -14,7 +15,8 @@ class DoneScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28),
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 24),
+            padding:
+                const EdgeInsets.symmetric(vertical: 60, horizontal: 24),
             decoration: BoxDecoration(
               color: const Color(0xFFFFF9E6),
               borderRadius: BorderRadius.circular(16),
@@ -22,7 +24,6 @@ class DoneScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Gold checkmark circle
                 Container(
                   width: 100,
                   height: 100,
@@ -30,24 +31,37 @@ class DoneScreen extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: AppColors.primary,
                   ),
-                  child: const Icon(
-                    Icons.check,
-                    size: 56,
-                    color: Colors.white,
+                  child: const Icon(Icons.check, size: 56, color: Colors.white),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  'Profile saved!',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto',
+                    color: AppColors.textDark,
                   ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Next, verify your email to activate your account.',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: AppColors.textGrey,
+                    fontFamily: 'Roboto',
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
                 AppButton(
                   label: 'Continue',
-                  onPressed: () {
-                    // Passenger → email verification
-                    // Driver → email verification (then driver-specific pages later)
-                    Navigator.pushReplacementNamed(
-                      context,
-                      '/email-verification',
-                      arguments: role,
-                    );
-                  },
+                  onPressed: () => Navigator.pushReplacementNamed(
+                    context,
+                    '/email-verification',
+                    arguments: role,
+                  ),
                 ),
               ],
             ),
