@@ -12,7 +12,7 @@ class TripsScreen extends StatefulWidget {
 
 class _TripsScreenState extends State<TripsScreen> {
   late int _selectedTab;
-  int _navIndex = 1; // trips is index 1 in bottom nav
+  final int _navIndex = 1; // trips is index 1 in bottom nav
 
   @override
   void initState() {
