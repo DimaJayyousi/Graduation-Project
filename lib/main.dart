@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:tal3/NewDriver/NDriverEditProfile_screen.dart';
+import 'package:tal3/NewDriver/NDriverHome_screen.dart';
+import 'package:tal3/NewDriver/NDriverRatings_screen.dart';
+import 'package:tal3/NewDriver/NDriverRides_screen.dart';
+import 'package:tal3/NewDriver/NDrivertrips_screen.dart';
+import 'package:tal3/NewDriver/NDriverProfile_screen.dart';
+import 'package:tal3/NewDriver/NDriverChat_screen.dart';
+import 'package:tal3/NewDriver/NDriverHelp_screen.dart';
+import 'package:tal3/NewDriver/VehicleDetails_Screen.dart';
 import './services/firebase_options.dart';
 import 'app_theme.dart';
 import 'startPages/splash_screen.dart';
@@ -60,8 +69,17 @@ class TaSApp extends StatelessWidget {
 
 
 
-        // Placeholders — to be built later
-        '/driver-home':          (_) => const _PlaceholderPage('Driver Home'),
+       '/driver-home': (context) => const DriverHomeScreen(),
+       '/driver-trips': (context) => const DriverTripsScreen(),
+        '/driver-chat': (context) => const DriverChatScreen(),
+        '/driver-profile': (context) => const DriverProfileScreen(),
+        '/driver-help': (context) => const DriverHelpScreen(),
+        '/driver-my-rides': (context) => const DriverMyRidesScreen(),
+        '/driver-ratings': (context) => const DriverRatingsScreen(),
+        '/driver-edit-profile': (context) => const DriverEditProfileScreen(),
+         '/driver-vehicle-details': (context) => const DriverVehicleDetailsScreen(),
+        
+
       },
     );
   }
