@@ -37,6 +37,10 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     }
   }
 
+  void _openPostTrip() {
+    Navigator.pushNamed(context, '/post-ride');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,23 +48,23 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // ── Top bar ──────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
               child: Row(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      // TODO: navigate to create trip screen
-                    },
+                  InkWell(
+                    onTap: _openPostTrip,
+                    borderRadius: BorderRadius.circular(20),
                     child: Container(
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.textDark, width: 1.5),
+                        border: Border.all(
+                            color: AppColors.textDark, width: 1.5),
                       ),
-                      child: const Icon(Icons.add, size: 22, color: AppColors.textDark),
+                      child: const Icon(Icons.add,
+                          size: 22, color: AppColors.textDark),
                     ),
                   ),
                   const Expanded(
@@ -83,13 +87,11 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
 
             const SizedBox(height: 20),
 
-            // ── Welcome card ─────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: GestureDetector(
-                onTap: () {
-                  // TODO: navigate to create trip screen
-                },
+              child: InkWell(
+                onTap: _openPostTrip,
+                borderRadius: BorderRadius.circular(16),
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(20, 18, 16, 18),
                   decoration: BoxDecoration(
@@ -100,21 +102,17 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                   child: const Row(
                     children: [
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Welcome',
-                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark, fontFamily: 'Roboto')),
-                            SizedBox(height: 4),
-                            Text('Ready to plan your first trip?',
-                                style: TextStyle(fontSize: 13, color: AppColors.textDark, fontFamily: 'Roboto')),
-                            SizedBox(height: 2),
-                            Text('Start',
-                                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textDark, fontFamily: 'Roboto')),
-                          ],
+                        child: Text(
+                          'Ready to plan your first trip?',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Roboto',
+                              color: AppColors.textDark),
                         ),
                       ),
-                      Icon(Icons.car_rental, size: 52, color: AppColors.textDark),
+                      Icon(Icons.car_rental,
+                          size: 48, color: AppColors.textDark),
                     ],
                   ),
                 ),
@@ -135,11 +133,16 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
                 ),
                 child: TextField(
                   controller: _searchCtrl,
-                  style: const TextStyle(fontSize: 14, fontFamily: 'Roboto'),
+                  style: const TextStyle(
+                      fontSize: 14, fontFamily: 'Roboto'),
                   decoration: const InputDecoration(
                     hintText: 'Search',
-                    hintStyle: TextStyle(color: AppColors.textGrey, fontSize: 14, fontFamily: 'Roboto'),
-                    prefixIcon: Icon(Icons.search, color: AppColors.textGrey, size: 22),
+                    hintStyle: TextStyle(
+                        color: AppColors.textGrey,
+                        fontSize: 14,
+                        fontFamily: 'Roboto'),
+                    prefixIcon: Icon(Icons.search,
+                        color: AppColors.textGrey, size: 22),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(vertical: 14),
                   ),
@@ -158,28 +161,3 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

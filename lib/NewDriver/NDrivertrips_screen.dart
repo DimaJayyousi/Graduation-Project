@@ -44,6 +44,10 @@ class _DriverTripsScreenState extends State<DriverTripsScreen>
     }
   }
 
+  void _openPostTrip() {
+    Navigator.pushNamed(context, '/post-ride');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,10 +65,9 @@ class _DriverTripsScreenState extends State<DriverTripsScreen>
                     controller: _tabController,
                     labelColor: AppColors.textDark,
                     unselectedLabelColor: AppColors.textGrey,
-                    labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'Roboto'),
-                    unselectedLabelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, fontFamily: 'Roboto'),
                     indicator: const UnderlineTabIndicator(
-                      borderSide: BorderSide(color: AppColors.textDark, width: 2.5),
+                      borderSide:
+                          BorderSide(color: AppColors.textDark, width: 2.5),
                     ),
                     tabs: const [
                       Tab(text: 'Active'),
@@ -78,7 +81,10 @@ class _DriverTripsScreenState extends State<DriverTripsScreen>
                   child: TabBarView(
                     controller: _tabController,
                     children: const [
-                      _EmptyTripsCard(message: 'No Trips', subtitle: 'Once you join a trip it will appear here.'),
+                      _EmptyTripsCard(
+                          message: 'No Trips',
+                          subtitle:
+                              'Once you post a trip it will appear here.'),
                       _EmptyTripsCard(message: 'Nothing here right now'),
                       _EmptyTripsCard(message: 'Nothing here right now'),
                     ],
@@ -86,19 +92,14 @@ class _DriverTripsScreenState extends State<DriverTripsScreen>
                 ),
               ],
             ),
+
             Positioned(
               right: 20,
               bottom: 16,
-              child: GestureDetector(
-                onTap: () {
-                  // TODO: navigate to create trip screen
-                },
-                child: Container(
-                  width: 52,
-                  height: 52,
-                  decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.textDark),
-                  child: const Icon(Icons.add, color: Colors.white, size: 28),
-                ),
+              child: FloatingActionButton(
+                backgroundColor: AppColors.textDark,
+                onPressed: _openPostTrip,
+                child: const Icon(Icons.add, color: Colors.white, size: 28),
               ),
             ),
           ],
@@ -124,21 +125,31 @@ class _EmptyTripsCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
       child: Container(
         width: double.infinity,
-        decoration: BoxDecoration(color: const Color(0xFFFFF3CD), borderRadius: BorderRadius.circular(20)),
+        decoration: BoxDecoration(
+            color: const Color(0xFFFFF3CD),
+            borderRadius: BorderRadius.circular(20)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (subtitle != null) ...[
-              Text(message, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, fontFamily: 'Roboto', color: AppColors.textDark)),
+              Text(message,
+                  style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Roboto',
+                      color: AppColors.textDark)),
               const SizedBox(height: 8),
-              Text(subtitle!, style: const TextStyle(fontSize: 13, color: AppColors.textDark, fontFamily: 'Roboto'), textAlign: TextAlign.center),
+              Text(subtitle!,
+                  style: const TextStyle(
+                      fontSize: 13,
+                      color: AppColors.textDark,
+                      fontFamily: 'Roboto'),
+                  textAlign: TextAlign.center),
               const SizedBox(height: 24),
             ],
-            Icon(Icons.location_on, size: subtitle != null ? 90 : 110, color: AppColors.textDark),
-            if (subtitle == null) ...[
-              const SizedBox(height: 16),
-              Text(message, style: const TextStyle(fontSize: 14, color: AppColors.textDark, fontFamily: 'Roboto')),
-            ],
+            Icon(Icons.location_on,
+                size: subtitle != null ? 90 : 110,
+                color: AppColors.textDark),
           ],
         ),
       ),

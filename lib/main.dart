@@ -8,6 +8,7 @@ import 'package:tal3/NewDriver/NDrivertrips_screen.dart';
 import 'package:tal3/NewDriver/NDriverProfile_screen.dart';
 import 'package:tal3/NewDriver/NDriverChat_screen.dart';
 import 'package:tal3/NewDriver/NDriverHelp_screen.dart';
+import 'package:tal3/NewDriver/PostATripScreen.dart';
 import 'package:tal3/NewDriver/VehicleDetails_Screen.dart';
 import './services/firebase_options.dart';
 import 'app_theme.dart';
@@ -78,6 +79,7 @@ class TaSApp extends StatelessWidget {
         '/driver-ratings': (context) => const DriverRatingsScreen(),
         '/driver-edit-profile': (context) => const DriverEditProfileScreen(),
          '/driver-vehicle-details': (context) => const DriverVehicleDetailsScreen(),
+         '/post-ride':              (context) => const PostATripScreen(),
         
 
       },
